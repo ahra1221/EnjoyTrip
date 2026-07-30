@@ -23,6 +23,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import com.ssafy.trip.model.dto.FestivalSearchDto;
 import com.ssafy.trip.model.dto.TripDto;
 import com.ssafy.trip.model.dto.TripSearchDto;
 import com.ssafy.trip.model.service.TripService;
@@ -39,11 +40,14 @@ public class TripInfoView {
 	/** 관광지 이미지 표시 Panel */
 	private JLabel imgL;
 	private JLabel[] tripInfoL;
+	private JButton festivalBt;
 
 	/** 조회 조건 */
 	private JComboBox<String> findC;
 	private JTextField wordTf;
 	private JButton searchBt;
+
+	
 
 	/** 조회 내용 표시할 table */
 	private DefaultTableModel tripModel;
@@ -79,10 +83,52 @@ public class TripInfoView {
 		frame.setVisible(true);
 		showTripInfo(0);
 	}
+	
+	private String convertSido(String sido) {
+
+	    if (sido.endsWith("특별시"))
+	        return sido.replace("특별시", "");
+
+	    if (sido.endsWith("광역시"))
+	        return sido.replace("광역시", "");
+
+	    if (sido.endsWith("특별자치시"))
+	        return sido.replace("특별자치시", "");
+
+	    if (sido.endsWith("도"))
+	        return sido.replace("도", "");
+
+	    return sido;
+	}
+	
 
 	private void showTripInfo(int num) {
 		curTrip = tripService.search(num);
+//		JPanel rightTop32 = new JPanel(new GridLayout(1, 3));
+//		rightTop2.add(searchBt);
+		String address = curTrip.getStreetAddress();
 
+		if (address == null || address.isBlank()) {
+		    address = curTrip.getLotAddress();
+		}
+
+		if (address == null || address.isBlank()) {
+		    return;   // 주소 자체가 없으면 종료
+		}
+
+		String[] token = address.trim().split("\\s+");
+
+		if (token.length < 2) {
+		    return;
+		}
+
+		FestivalSearchDto dto = new FestivalSearchDto();
+
+		dto.setSido(convertSido(token[0]));
+		dto.setSigungu(token[1]);
+
+		FestivalView.show(dto);
+		
 		tripInfoL[0].setText("");
 		tripInfoL[1].setText("");
 		tripInfoL[2].setText(curTrip.getTouristDestination());
@@ -110,6 +156,7 @@ public class TripInfoView {
 		Image changeImage = image.getScaledInstance(570, 470, Image.SCALE_SMOOTH);
 		ImageIcon changeIcon = new ImageIcon(changeImage);
 		imgL.setIcon(changeIcon);
+		
 	}
 
 	/** 메인 화면인 관광지 목록을 위한 화면 셋팅하는 메서드 */
@@ -119,6 +166,7 @@ public class TripInfoView {
 		JPanel left = new JPanel(new BorderLayout());
 		JPanel leftCenter = new JPanel(new BorderLayout(0, 10));
 		JPanel leftR = new JPanel(new GridLayout(10, 2));
+		festivalBt=new JButton("이 지역 축제 보기");
 		leftR.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
 		String[] info = { "", "", "관광지명", "도로명주소", "지번주소", "위도", "경도", "전화번호", "관광지정보", "" };
@@ -136,6 +184,7 @@ public class TripInfoView {
 		leftCenter.add(leftR, "South");
 
 		left.add(new JLabel("관광지 정보", JLabel.CENTER), "North");
+		left.add(festivalBt, BorderLayout.SOUTH);
 		left.add(leftCenter, "Center");
 
 		/* 오른쪽 화면을 위한 설정 */
@@ -147,6 +196,7 @@ public class TripInfoView {
 		findC = new JComboBox<String>(item);
 		wordTf = new JTextField();
 		searchBt = new JButton("검색");
+		
 
 		rightTop2.add(findC);
 		rightTop2.add(wordTf);
@@ -206,6 +256,49 @@ public class TripInfoView {
 		// 참조코드 종료
 
 		showTrips();
+		
+		festivalBt.addActionListener( new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				searchFestivals();
+			}
+		} );
+	}
+
+	
+	/** 같은 지역의 축제 검색 */
+	private void searchFestivals() {
+
+	    String address = curTrip.getStreetAddress();
+
+	    // 도로명 주소가 없으면 지번주소 사용
+	    if(address == null || address.trim().isEmpty()) {
+	        address = curTrip.getLotAddress();
+	    }
+
+
+	    System.out.println("축제 검색 주소 : " + address);
+
+
+	    String[] token = address.trim().split("\\s+");
+
+
+	    if(token.length < 2) {
+	        System.out.println("주소 형식 오류");
+	        return;
+	    }
+
+
+	    FestivalSearchDto dto = new FestivalSearchDto();
+
+	    dto.setSido(convertSido(token[0]));
+	    dto.setSigungu(token[1]);
+
+
+	    System.out.println(dto);
+
+
+	    new FestivalView(dto);
 	}
 
 	/** 검색 조건에 맞는 관광지 검색 */
@@ -214,7 +307,7 @@ public class TripInfoView {
 		key = choice[findC.getSelectedIndex()];
 		showTrips();
 	}
-
+	
 	/**
 	 * 관광지 목록을 갱신하기 위한 메서드
 	 */
