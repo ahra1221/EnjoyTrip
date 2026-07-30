@@ -45,7 +45,7 @@ public class FestivalView {
         }
     }
     
-    private FestivalView(FestivalSearchDto dto) {
+    FestivalView(FestivalSearchDto dto) {
 
         festivalService = new FestivalServiceImpl();
 

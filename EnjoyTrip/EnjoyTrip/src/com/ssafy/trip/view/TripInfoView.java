@@ -81,6 +81,7 @@ public class TripInfoView {
 		frame.setSize(1200, 800);
 		frame.setResizable(true);
 		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		showTripInfo(0);
 	}
 	
