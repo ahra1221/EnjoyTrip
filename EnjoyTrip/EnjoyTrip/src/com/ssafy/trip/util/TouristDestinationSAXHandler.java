@@ -23,7 +23,7 @@ public class TouristDestinationSAXHandler extends DefaultHandler {
 	private TripDto tripDto;
 	/** 태그 바디 정보를 임시로 저장 */
 	private String temp;
-
+	private int idx=0;
 	public TouristDestinationSAXHandler() {
 		trips = new ArrayList<TripDto>();
 	}
@@ -31,7 +31,7 @@ public class TouristDestinationSAXHandler extends DefaultHandler {
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes att) {
 		temp = "";
-		int idx=0;
+		
 		String[] imageList= {
 				"image01.jpg", "image02.jpg", "image03.jpg",
 				"image04.jpg", "image05.jpg", "image06.jpg",
@@ -41,13 +41,15 @@ public class TouristDestinationSAXHandler extends DefaultHandler {
 		if (qName.equals("record")) {
 			// complete code #04
 			// tripDto 객체를 생성(이미지 정보 세팅)하고 trips List에 추가하세요.
-			TripDto td=new TripDto(num);
-			td.setNum(idx++);
-			if (idx<11) {
-				td.setImg(imageList[idx]);
+			tripDto=new TripDto(idx);
+			endElement(uri, localName, qName);
+			if (idx<imageList.length) {
+				tripDto.setImg(imageList[idx]);
 			}else {
-				td.setImg(imageList[11]);
+				tripDto.setImg(imageList[11]);
 			}
+			trips.add(tripDto);
+			idx++;
 		}
 	}
 
