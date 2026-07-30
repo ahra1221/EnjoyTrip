@@ -162,7 +162,7 @@ public class TripInfoView {
 		tripTable = new JTable(tripModel);
 		tripPan = new JScrollPane(tripTable);
 		tripTable.setColumnSelectionAllowed(true);
-		rightCenter.add(new JLabel("광광지 정보", JLabel.CENTER), "North");
+		rightCenter.add(new JLabel("관광지 정보", JLabel.CENTER), "North");
 		rightCenter.add(tripPan, "Center");
 
 		right.add(rightTop, "North");
