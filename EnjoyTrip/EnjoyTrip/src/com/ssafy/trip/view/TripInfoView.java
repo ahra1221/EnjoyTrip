@@ -41,7 +41,8 @@ public class TripInfoView {
 	private JLabel imgL;
 	private JLabel[] tripInfoL;
 	private JButton festivalBt;
-
+	private JButton nearBt;
+	
 	/** 조회 조건 */
 	private JComboBox<String> findC;
 	private JTextField wordTf;
@@ -170,6 +171,8 @@ public class TripInfoView {
 		festivalBt=new JButton("이 지역 축제 보기");
 		leftR.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
+		nearBt = new JButton("주변 관광지");
+		
 		String[] info = { "", "", "관광지명", "도로명주소", "지번주소", "위도", "경도", "전화번호", "관광지정보", "" };
 		int size = info.length;
 		JLabel infoL[] = new JLabel[size];
@@ -184,8 +187,20 @@ public class TripInfoView {
 		leftCenter.add(imgL, "Center");
 		leftCenter.add(leftR, "South");
 
-		left.add(new JLabel("관광지 정보", JLabel.CENTER), "North");
-		left.add(festivalBt, BorderLayout.SOUTH);
+		JPanel leftTop = new JPanel(new BorderLayout());
+
+		JLabel titleLabel = new JLabel("관광지 정보", JLabel.CENTER);
+
+		leftTop.add(titleLabel, BorderLayout.CENTER);
+
+		JPanel buttonPanel = new JPanel();
+
+		buttonPanel.add(festivalBt);
+		buttonPanel.add(nearBt);
+
+		leftTop.add(buttonPanel, BorderLayout.EAST);
+
+		left.add(leftTop, BorderLayout.NORTH);
 		left.add(leftCenter, "Center");
 
 		/* 오른쪽 화면을 위한 설정 */
@@ -235,6 +250,8 @@ public class TripInfoView {
 				showTripInfo(code);
 			}
 		});
+		
+		nearBt.addActionListener(e -> new TripNearView());
 
 		// complete code #01
 		// 아래의 코드를 참조하여 아래 라인을 uncomment 하고 searchBt.addActionList() 를 Lambda 표현식으로 바꾸세요.
@@ -295,11 +312,9 @@ public class TripInfoView {
 	    dto.setSido(convertSido(token[0]));
 	    dto.setSigungu(token[1]);
 
-
 	    System.out.println(dto);
 
-
-	    new FestivalView(dto);
+	    FestivalView.show(dto);
 	}
 
 	/** 검색 조건에 맞는 관광지 검색 */
