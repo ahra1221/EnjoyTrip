@@ -190,14 +190,19 @@ public class TripInfoView {
 		// searchBt.addActionListener( /* 여기 */ );
 
 		// 참조코드 시작 - 위 코드를 완성 후 삭제 또는 comment 처리하세요.
-		ActionListener buttonHandler = new ActionListener() {
+//		ActionListener buttonHandler = new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				searchTrips();
+//			}
+//		};
+		
+		searchBt.addActionListener( new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				searchTrips();
 			}
-		};
-		
-		searchBt.addActionListener( buttonHandler );
+		} );
 		// 참조코드 종료
 
 		showTrips();
