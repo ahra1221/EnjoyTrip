@@ -1,5 +1,7 @@
 package com.ssafy.trip.model.dto;
 
+import java.util.Objects;
+
 public class TripDto {
 
 	/** 관광지 식별 번호 */
