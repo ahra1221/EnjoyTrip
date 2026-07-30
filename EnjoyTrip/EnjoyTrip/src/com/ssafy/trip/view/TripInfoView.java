@@ -39,6 +39,7 @@ public class TripInfoView {
 	/** 관광지 이미지 표시 Panel */
 	private JLabel imgL;
 	private JLabel[] tripInfoL;
+	private JButton nearBt;
 
 	/** 조회 조건 */
 	private JComboBox<String> findC;
@@ -121,6 +122,8 @@ public class TripInfoView {
 		JPanel leftR = new JPanel(new GridLayout(10, 2));
 		leftR.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
+		nearBt = new JButton("주변 관광지");
+		
 		String[] info = { "", "", "관광지명", "도로명주소", "지번주소", "위도", "경도", "전화번호", "관광지정보", "" };
 		int size = info.length;
 		JLabel infoL[] = new JLabel[size];
@@ -135,7 +138,16 @@ public class TripInfoView {
 		leftCenter.add(imgL, "Center");
 		leftCenter.add(leftR, "South");
 
-		left.add(new JLabel("관광지 정보", JLabel.CENTER), "North");
+		JPanel leftTop = new JPanel(new BorderLayout());
+
+		JLabel titleLabel = new JLabel("관광지 정보", JLabel.CENTER);
+
+		JButton nearBt = new JButton("주변 관광지");
+
+		leftTop.add(titleLabel, BorderLayout.CENTER);
+		leftTop.add(nearBt, BorderLayout.EAST);
+
+		left.add(leftTop, BorderLayout.NORTH);
 		left.add(leftCenter, "Center");
 
 		/* 오른쪽 화면을 위한 설정 */
@@ -184,6 +196,8 @@ public class TripInfoView {
 				showTripInfo(code);
 			}
 		});
+		
+		nearBt.addActionListener(e -> new TripNearView());
 
 		// complete code #01
 		// 아래의 코드를 참조하여 아래 라인을 uncomment 하고 searchBt.addActionList() 를 Lambda 표현식으로 바꾸세요.
